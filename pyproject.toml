@@ -1,0 +1,113 @@
+[build-system]
+requires = ["setuptools>=77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spc-lib-py"
+version = "0.1.0"
+description = "Statistical process control (SPC) calculation library: control-limit maths, a rule engine and data contracts, independent of any rendering choice."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
+authors = [{ name = "Andrew Humphrey" }]
+maintainers = [{ name = "Kensa Health Virtual Care Ltd" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Typing :: Typed",
+]
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "pydantic>=2.7",
+]
+
+[project.urls]
+Repository = "https://github.com/Kensa-Health/spc-lib-py"
+Issues = "https://github.com/Kensa-Health/spc-lib-py/issues"
+Changelog = "https://github.com/Kensa-Health/spc-lib-py/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+render = ["plotly>=5.20"]
+# Static notebook output requires Kaleido and a local Chrome installation.
+notebook = ["jupyterlab>=4", "nbconvert>=7", "plotly>=6.1.1", "kaleido>=1", "pyarrow>=14"]
+release = ["build>=1.2", "twine>=6"]
+# Only needed for kind="xbar_r" with a subgroup size above the tabulated
+# n=10 -- numerical integration to derive A2/D3/D4 for larger n. Every
+# other code path in this library never imports scipy.
+extended = ["scipy>=1.11"]
+# pandas-stubs/scipy-stubs: neither installed wheel reliably ships a
+# py.typed marker, so `mypy spc` fails with "Library stubs not installed"
+# for both without these -- not needed at runtime, only for the type
+# checker.
+test = [
+    "pytest>=7.4",
+    "pyarrow>=14",
+    "scipy>=1.11",
+    "pandas-stubs>=2.2",
+    "scipy-stubs>=1.11",
+    "mypy>=1.11",
+    "ruff>=0.6",
+]
+# Only needed to run scripts/fetch_nhsrdatasets.py -- not needed to run the
+# test suite itself, which reads the already-fetched parquet snapshots.
+dev = ["pyreadr>=0.5", "pyarrow>=14"]
+
+[tool.setuptools.packages.find]
+include = ["spc*"]
+
+[tool.setuptools.package-data]
+# PEP 561 marker (spc/py.typed) -- setuptools doesn't include non-.py files
+# in the built package by default, so without this entry the marker would
+# exist in the source tree but silently NOT ship in the actual wheel/sdist.
+spc = ["py.typed"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = ["notebooks", "scripts/demo_output"]
+
+[tool.ruff.lint]
+# E/F/W: pycodestyle and pyflakes. I: import order. B: bugbear (e.g. zip without
+# strict=, loop variables). UP: pyupgrade. PD: pandas-vet. SIM/RET/C4/PIE: simplifications.
+select = ["E", "F", "W", "I", "B", "UP", "PD", "SIM", "RET", "C4", "PIE"]
+ignore = [
+    "PD101",  # nunique() == 1 is the clearest constant-check here; the cost is negligible
+    "UP042",  # LimitMode(str, Enum): StrEnum would change str(LimitMode.X), which callers may rely on
+]
+
+[tool.ruff.format]
+# Applied through scripts/format_code.py, which runs `ruff format` and then puts function
+# signatures in the one-parameter-per-line layout described in that script.
+quote-style = "double"
+skip-magic-trailing-comma = false
+
+[tool.mypy]
+python_version = "3.11"
+files = ["spc"]
+strict = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+# plotly ships neither stubs nor a py.typed marker.
+module = ["plotly", "plotly.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# A warning in the suite is either a real problem or bad test data (the duplicate-date
+# warning once caught a test that charted two rows per week under one facet). Tests that
+# expect a warning use pytest.warns.
+filterwarnings = [
+    "error::UserWarning",
+    "error::FutureWarning",
+    "error::DeprecationWarning",
+]

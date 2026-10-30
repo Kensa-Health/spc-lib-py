@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    # Preserve supported dependency ranges when they already allow an update.
+    versioning-strategy: increase-if-necessary
+    open-pull-requests-limit: 5

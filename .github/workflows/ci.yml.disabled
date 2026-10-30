@@ -1,0 +1,99 @@
+# Disabled: local validation replaces hosted CI. GitHub only loads .yml/.yaml workflows.
+# See README.md and RELEASING.md for manual coverage requirements and known gaps.
+# To restore hosted checks, rename to ci.yml and restore the github-actions Dependabot entry.
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Python ${{ matrix.python }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python: ['3.11', '3.12', '3.13', '3.14']
+        include:
+          - os: macos-latest
+            python: '3.12'
+          - os: windows-latest
+            python: '3.12'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: python -m pip install -e ".[render,test]"
+      - run: python -m pytest
+
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -e ".[render,test]"
+      - run: python scripts/format_code.py --check
+      - run: python -m ruff check .
+      - run: python -m mypy
+
+  packages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install build twine
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - run: python scripts/check_dist.py dist
+      - name: Check core-only installed wheel outside the checkout
+        shell: bash
+        run: |
+          python -m venv "$RUNNER_TEMP/wheel-env"
+          "$RUNNER_TEMP/wheel-env/bin/python" -m pip install dist/*.whl
+          "$RUNNER_TEMP/wheel-env/bin/python" -I - <<'PY'
+          import importlib.metadata
+          import sys
+          import pandas as pd
+          import spc
+          df = pd.DataFrame({"period": pd.date_range("2024-01-01", periods=20), "value": [10, 12, 11, 9, 10] * 4})
+          result = spc.chart(df, kind="xmr", options=spc.BaseChartOptions(value_field="value", date_field="period"))
+          assert len(result.points) == 20
+          assert spc.ChartResult.model_validate_json(result.model_dump_json()) == result
+          assert spc.__version__ == importlib.metadata.version("spc-lib-py")
+          assert "plotly" not in sys.modules and "scipy" not in sys.modules
+          PY
+      - name: Run tests from the distributed source
+        shell: bash
+        run: |
+          mkdir "$RUNNER_TEMP/sdist"
+          tar -xzf dist/*.tar.gz -C "$RUNNER_TEMP/sdist"
+          cd "$RUNNER_TEMP"/sdist/spc_lib_py-*
+          python -m pip install ".[render,test]"
+          python -m pytest

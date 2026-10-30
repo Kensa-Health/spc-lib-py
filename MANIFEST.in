@@ -1,0 +1,9 @@
+include LICENSE THIRD_PARTY_NOTICES.md README.md CONTRIBUTING.md SECURITY.md CHANGELOG.md RELEASING.md
+include pyproject.toml MANIFEST.in
+recursive-include spc *.py py.typed
+recursive-include tests *.py *.md *.parquet *.csv
+recursive-include data *.py *.md *.csv
+recursive-include scripts *.py *.R
+recursive-include notebooks *.ipynb
+prune scripts/demo_output
+global-exclude __pycache__ *.py[cod] .DS_Store

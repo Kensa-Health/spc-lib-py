@@ -6,8 +6,9 @@ Use GitHub's private [Report a vulnerability](https://github.com/Kensa-Health/sp
 form. Include the affected version, a minimal reproduction with synthetic data, the impact and
 any suggested mitigation. Do not disclose vulnerabilities or sensitive data in public issues.
 
-If the private form is unavailable, open an issue asking only for a private contact route;
-do not include vulnerability details.
+If the private form is unavailable, email [opensource@kensahealth.com](mailto:opensource@kensahealth.com)
+with a short description and we will arrange a private route for the details. Do not open a
+public issue.
 
 ## Supported versions
 

@@ -9,7 +9,6 @@ personal information.
 
 ## Reporting
 
-Use GitHub's **Report content** option on the comment, issue or discussion concerned, or
-contact a maintainer listed in [.github/CODEOWNERS](.github/CODEOWNERS) through their
-GitHub profile. Kensa Health maintainers review reports, keep the reporter's identity
+Email [opensource@kensahealth.com](mailto:opensource@kensahealth.com), or use GitHub's
+**Report content** option on the comment, issue or discussion concerned. Kensa Health maintainers review reports, keep the reporter's identity
 private and may edit or remove content, or block accounts, that breach this code.

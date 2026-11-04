@@ -10,5 +10,6 @@ personal information.
 ## Reporting
 
 Email [opensource@kensahealth.com](mailto:opensource@kensahealth.com), or use GitHub's
-**Report content** option on the comment, issue or discussion concerned. Kensa Health maintainers review reports, keep the reporter's identity
-private and may edit or remove content, or block accounts, that breach this code.
+**Report content** option on the comment, issue or discussion concerned. Maintainers at
+Kensa Health Virtual Care Ltd review reports, keep the reporter's identity private and may
+edit or remove content, or block accounts, that breach this code.

@@ -5,7 +5,7 @@ Ask questions in [Discussions Q&A](https://github.com/Kensa-Health/spc-lib-py/di
 Propose new statistical methods, integrations or changes to the public API in
 [Discussions Ideas](https://github.com/Kensa-Health/spc-lib-py/discussions/categories/ideas) first;
 maintainers open an issue once there is agreement, before anyone implements it.
-Kensa Health maintains the project; repository maintainers review pull requests.
+Kensa Health Virtual Care Ltd maintains the project; repository maintainers review pull requests.
 For security reports, follow [SECURITY.md](SECURITY.md). Everyone taking part follows the
 [code of conduct](CODE_OF_CONDUCT.md).
 

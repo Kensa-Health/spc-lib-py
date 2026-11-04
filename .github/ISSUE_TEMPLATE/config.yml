@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions
+    url: https://github.com/Kensa-Health/spc-lib-py/discussions/categories/q-a
+    about: Ask how to use the library, which chart kind fits your data or how to read a signal.
+  - name: Ideas and integrations
+    url: https://github.com/Kensa-Health/spc-lib-py/discussions/categories/ideas
+    about: Suggest a chart kind, method or integration before it becomes an issue.
+  - name: Security vulnerability
+    url: https://github.com/Kensa-Health/spc-lib-py/security/advisories/new
+    about: Report security problems privately. Do not open a public issue.

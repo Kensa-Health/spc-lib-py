@@ -1,9 +1,13 @@
 # Contributing
 
-Report bugs and propose changes through [GitHub issues](https://github.com/Kensa-Health/spc-lib-py/issues).
-Kensa Health maintains the project; repository maintainers review pull requests.
-Discuss new statistical methods or changes to the public API in an issue before implementing them.
-For security reports, follow [SECURITY.md](SECURITY.md).
+Report bugs through [GitHub issues](https://github.com/Kensa-Health/spc-lib-py/issues).
+Ask questions in [Discussions Q&A](https://github.com/Kensa-Health/spc-lib-py/discussions/categories/q-a).
+Propose new statistical methods, integrations or changes to the public API in
+[Discussions Ideas](https://github.com/Kensa-Health/spc-lib-py/discussions/categories/ideas) first;
+maintainers open an issue once there is agreement, before anyone implements it.
+Kensa Health Virtual Care Ltd maintains the project; repository maintainers review pull requests.
+For security reports, follow [SECURITY.md](SECURITY.md). Everyone taking part follows the
+[code of conduct](CODE_OF_CONDUCT.md).
 
 ## Development setup
 
@@ -62,7 +66,9 @@ credentials or private paths. Be respectful and make feedback specific to the wo
 
 ## Contributions and releases
 
-Submit only material you have the right to contribute. Contributions are supplied under the
+Submit only material you have the right to contribute. Sign off every commit (`git commit -s`)
+to certify the [Developer Certificate of Origin](https://developercertificate.org/); commits made
+in the GitHub web interface require sign-off. Contributions are supplied under the
 project's [MIT licence](LICENSE); retain any applicable third-party notices. No copyright
 assignment is required. The 0.x API can change between minor releases; document breaking changes.
 Maintainers follow [RELEASING.md](RELEASING.md) when preparing a release.
